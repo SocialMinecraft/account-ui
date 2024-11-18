@@ -5,17 +5,17 @@ export default async function Page({
                                    }: {
     params: Promise<{ token: string }>
 }) {
-    let token = (await params).token;
-    let accountRes = await fetch('https://account.somc.club/api/' + token + '/account');
-    let minecraftAccountRes = await fetch('https://account.somc.club/api/' + token + '/minecraft_accounts');
+    const token = (await params).token;
+    const accountRes = await fetch('https://account.somc.club/api/' + token + '/account');
+    const minecraftAccountRes = await fetch('https://account.somc.club/api/' + token + '/minecraft_accounts');
     if (accountRes.status !== 200) {
         return <div className="text-black">Error</div>
     }
     if (minecraftAccountRes.status !== 200) {
         return <div className="text-black">Error</div>
     }
-    let account = await accountRes.json();
-    let minecraftAccounts = await minecraftAccountRes.json();
+    const account = await accountRes.json();
+    const minecraftAccounts = await minecraftAccountRes.json();
     return (
         <>
             <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10">
@@ -108,47 +108,58 @@ export default async function Page({
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                            {minecraftAccounts.accounts.map((account) => (
-                                <Fragment key={account.name + account.minecraft_uuid}>
-                                    <tr className="border-t border-gray-200">
-                                        <th
-                                            /*scope="colgroup"
-                                            colSpan={4}*/
-                                            className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                                        >
-                                            {account.username}
-                                        </th>
-                                        <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                            {secondsToFriendlyTime(account.playtime_sec)}
-                                        </th>
-                                        <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                            {account.deaths}
-                                        </th>
-                                        <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                        </th>
+                            {minecraftAccounts.accounts.map((account: {
+                                name: string;
+                                username: string;
+                                minecraft_uuid: string;
+                                playtime_sec: number;
+                                deaths: number;
+                                servers: {
+                                    name: string;
+                                    playtime_sec: number;
+                                    deaths: number;
+                                }[];
+                            }) => (
+                            <Fragment key={account.name + account.minecraft_uuid}>
+                                <tr className="border-t border-gray-200">
+                                    <th
+                                        /*scope="colgroup"
+                                        colSpan={4}*/
+                                        className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                                    >
+                                        {account.username}
+                                    </th>
+                                    <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                        {secondsToFriendlyTime(account.playtime_sec)}
+                                    </th>
+                                    <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                        {account.deaths}
+                                    </th>
+                                    <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                    </th>
+                                </tr>
+                                {account.servers.map((server) => (
+                                    <tr
+                                        key={server.name + account.minecraft_uuid + "2"}
+                                        className={'border-t'}
+                                    >
+                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                                            {server.name}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {secondsToFriendlyTime(server.playtime_sec)}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            {server.deaths}
+                                        </td>
+                                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                                Remove
+                                            </a>
+                                        </td>
                                     </tr>
-                                    {account.servers.map((server, idx) => (
-                                        <tr
-                                            key={server.name + server.minecraft_uuid + "2"}
-                                            className={idx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t'}
-                                        >
-                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                                                {server.name}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {secondsToFriendlyTime(server.playtime_sec)}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {server.deaths}
-                                            </td>
-                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                                                <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                    Remove
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </Fragment>
+                                ))}
+                            </Fragment>
                             ))}
                             </tbody>
                         </table>
