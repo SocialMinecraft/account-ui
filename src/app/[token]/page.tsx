@@ -108,10 +108,14 @@ export default async function Page({
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                            {minecraftAccounts.accounts.map((account: {
+                            {minecraftAccounts.accounts.sort((a : {playtime_sec: number}, b : { playtime_sec: number}) => {
+                                const aa = a.playtime_sec == undefined ? 0 : a.playtime_sec;
+                                const bb = b.playtime_sec == undefined ? 0 : b.playtime_sec;
+                                return bb - aa;
+                            }).map((account: {
                                 name: string;
                                 username: string;
-                                minecraft_uuid: string;
+                                uuid: string;
                                 playtime_sec: number;
                                 deaths: number;
                                 servers: {
@@ -120,7 +124,7 @@ export default async function Page({
                                     deaths: number;
                                 }[];
                             }) => (
-                            <Fragment key={account.name + account.minecraft_uuid}>
+                            <Fragment key={account.uuid + "1"}>
                                 <tr className="border-t border-gray-200">
                                     <th
                                         /*scope="colgroup"
@@ -140,7 +144,7 @@ export default async function Page({
                                 </tr>
                                 {account.servers.map((server) => (
                                     <tr
-                                        key={server.name + account.minecraft_uuid + "2"}
+                                        key={server.name + account.uuid + "2"}
                                         className={'border-t'}
                                     >
                                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
