@@ -140,6 +140,9 @@ export default async function Page({
                                         {account.deaths}
                                     </th>
                                     <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                            Remove
+                                        </a>
                                     </th>
                                 </tr>
                                 {account.servers.map((server) => (
@@ -157,9 +160,7 @@ export default async function Page({
                                             {server.deaths}
                                         </td>
                                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                Remove
-                                            </a>
+
                                         </td>
                                     </tr>
                                 ))}
