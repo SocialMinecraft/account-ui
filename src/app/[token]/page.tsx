@@ -1,4 +1,5 @@
 import {Fragment} from "react";
+import {redirect} from "next/navigation";
 
 export default async function Page({
                                        params,
@@ -8,10 +9,8 @@ export default async function Page({
     const token = (await params).token;
     const accountRes = await fetch('https://account.somc.club/api/' + token + '/account');
     const minecraftAccountRes = await fetch('https://account.somc.club/api/' + token + '/minecraft_accounts');
-    if (accountRes.status !== 200) {
-        return <div className="text-black">Error</div>
-    }
-    if (minecraftAccountRes.status !== 200) {
+    if (accountRes.status !== 200 || minecraftAccountRes.status !== 200) {
+        redirect(`/`);
         return <div className="text-black">Error</div>
     }
     const account = await accountRes.json();
