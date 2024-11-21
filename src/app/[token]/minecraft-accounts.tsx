@@ -1,4 +1,5 @@
 import {Fragment} from "react";
+import RemoveMinecraftAccountDialog from "@/app/[token]/remove-minecraft-account-dialog";
 
 
 export default async function MinecraftAccounts({token}: { token: string }) {
@@ -80,9 +81,7 @@ export default async function MinecraftAccounts({token}: { token: string }) {
                                         {account.deaths}
                                     </th>
                                     <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                            Remove
-                                        </a>
+                                        <RemoveMinecraftAccountDialog token={token} name={account.username} uuid={account.uuid} />
                                     </th>
                                 </tr>
                                 {account.servers.map((server) => (
