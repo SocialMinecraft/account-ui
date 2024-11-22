@@ -3,30 +3,41 @@
 import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import Alert from "@/app/[token]/alert";
 
 export default function RemoveMinecraftAccountDialog({token, name, uuid}: { token: string, name: string, uuid: string }) {
     const [open, setOpen] = useState(false)
-    console.log(token);
+    const [alert, setAlert] = useState("")
+    const [processing, setProcessing] = useState(false)
 
     const handleRemove = async () => {
+        setProcessing(true);
         try {
-            // Add your remove account API call here
-            // Example:
-            // await fetch(`https://account.somc.club/api/${token}/minecraft_accounts/${uuid}`, {
-            //     method: 'DELETE'
-            // });
-            setOpen(false)
-            // You might want to refresh the accounts list after successful removal
-            //window.location.reload()
+            const resp = await fetch(`https://account.somc.club/api/${token}/minecraft_accounts/${uuid}`, {
+                 method: 'DELETE'
+            });
+            const re = await resp.json();
+
+            if (re.error) {
+                setAlert(re.error);
+            } else {
+                setOpen(false);
+                window.location.reload()
+            }
         } catch (error) {
-            console.error('Error removing account:', error)
+            console.error(error)
+            setAlert("Unknown error")
         }
+        setProcessing(false);
     }
 
     return (
         <>
             <button
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setAlert("");
+                    setOpen(true);
+                }}
                 className="text-indigo-600 hover:text-indigo-900"
             >
                 Remove
@@ -63,13 +74,17 @@ export default function RemoveMinecraftAccountDialog({token, name, uuid}: { toke
                                     <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                                         Remove Account
                                     </DialogTitle>
+
                                     <div className="mt-2">
+                                        {alert.length > 0 &&
+                                            <Alert title="Error Removing Minecraft Account" message={alert} />}
+
                                         <p className="text-sm text-gray-500">
                                             Are you sure you want to remove the following account?<br/>
                                         </p>
                                         <center className="mt-3">
-                                        <p><em className="text-gray-600 font-bold">{name}</em></p>
-                                        <p className="text-gray-300 text-sm">{uuid}</p>
+                                            <p><em className="text-gray-600 font-bold">{name}</em></p>
+                                            <p className="text-gray-300 text-sm">{uuid}</p>
                                         </center>
                                     </div>
                                 </div>
@@ -78,7 +93,12 @@ export default function RemoveMinecraftAccountDialog({token, name, uuid}: { toke
                                 <button
                                     type="button"
                                     onClick={handleRemove}
-                                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                    className={`inline-flex w-full justify-center rounded-md
+                                    bg-red-600 px-3 py-2 text-sm font-semibold
+                                    text-white shadow-sm hover:bg-red-500 sm:ml-3
+                                    sm:w-auto
+                                    ${processing ? "cursor-not-allowed" : ""}
+                                    `}
                                 >
                                     Remove
                                 </button>
