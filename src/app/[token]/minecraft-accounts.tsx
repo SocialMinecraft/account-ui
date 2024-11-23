@@ -1,5 +1,6 @@
 import {Fragment} from "react";
 import RemoveMinecraftAccountDialog from "@/app/[token]/remove-minecraft-account-dialog";
+import Link from "next/link";
 
 
 export default async function MinecraftAccounts({token}: { token: string }) {
@@ -21,8 +22,16 @@ export default async function MinecraftAccounts({token}: { token: string }) {
     const minecraftAccounts = await minecraftAccountRes.json();
     return (
         <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10 mt-3">
-            <div className="border-b border-gray-200 pb-5">
+            <div className="sm:flex sm:items-center sm:justify-between border-b border-gray-200 pb-5">
                 <h3 className="text-base font-semibold text-gray-900">Minecraft Accounts</h3>
+                <div className="mt-3 flex sm:ml-4 sm:mt-0">
+                    <Link
+                        href={`/${token}/add-minecraft-account`}
+                        className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    >
+                        Add Account
+                    </Link>
+                </div>
             </div>
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -81,7 +90,8 @@ export default async function MinecraftAccounts({token}: { token: string }) {
                                         {account.deaths}
                                     </th>
                                     <th className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
-                                        <RemoveMinecraftAccountDialog token={token} name={account.username} uuid={account.uuid} />
+                                        <RemoveMinecraftAccountDialog token={token} name={account.username}
+                                                                      uuid={account.uuid}/>
                                     </th>
                                 </tr>
                                 {account.servers.map((server) => (
