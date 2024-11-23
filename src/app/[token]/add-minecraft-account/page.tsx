@@ -36,9 +36,12 @@ export default function AddMinecraftAccount() {
                         const formData = new FormData(e.currentTarget);
                         const username = formData.get('username');
 
+                        setAlert("");
                         setProcessing(true)
-                        setAlert(await add_account(token, username?.toString() || ""));
-                        if (alert.length === 0) {
+                        const error = await add_account(token, username?.toString() || "");
+                        if (error.length > 0) {
+                            setAlert(error);
+                        } else {
                             router.push(`/${token}`);
                         }
                         setProcessing(false);
